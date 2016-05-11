@@ -17,10 +17,7 @@ var CountriesBox = React.createClass({
   },
 
   //setting border countries. I want to map over current country and bring back it bordering countires and get the alpha codes. then by mapping over Countries if the aplha code from the bordering countries match a country then bring back that countries information. Make sure to bind(this) as I presume by having to map twice it will lose what this is. Also I could use => which is like writting 'function' and also means you dont have to use bind(this)
-  getBorderCountry: function(country){
-    var currentCountry = this.state.countries.map(function(countries, borders))
-    var BorderCountry = 
-  }
+
 
 //setting up step3, this will happen after a render
   componentDidMount:function(){
@@ -43,7 +40,7 @@ var CountriesBox = React.createClass({
         <CountrySelect countries={this.state.countries} onSelectCountry={this.setSelectedCountry}> </CountrySelect>
         <CountryInfo country={this.state.selectedCountry}> </CountryInfo>
 
-        <CountryBorders borders={this.state.countries} getBorderCountry={this.setBorderCountry}> </CountryBorders>
+     
 
       </div>
     )

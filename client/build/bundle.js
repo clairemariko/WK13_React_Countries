@@ -48,7 +48,7 @@
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var CountriesBox = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/CountriesBox\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var CountriesBox = __webpack_require__(159);
 	
 	window.onload = function () {
 	  ReactDOM.render(React.createElement(CountriesBox, null), document.getElementById('app'));
@@ -19661,6 +19661,214 @@
 	
 	module.exports = __webpack_require__(3);
 
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var CountrySelect = __webpack_require__(160);
+	var CountryInfo = __webpack_require__(161);
+	
+	var React = __webpack_require__(1);
+	
+	var CountriesBox = React.createClass({
+	  displayName: 'CountriesBox',
+	
+	
+	  //step 2 create an intial state and we dont have any data atm so it is an empty array. this is before the render
+	  getInitialState: function getInitialState() {
+	    return { countries: [], selectedCountry: null };
+	  },
+	
+	  //setting the state so it now the object country
+	  setSelectedCountry: function setSelectedCountry(country) {
+	    this.setState({ selectedCountry: country });
+	  },
+	
+	  //setting border countries. I want to map over current country and bring back it bordering countires and get the alpha codes. then by mapping over Countries if the aplha code from the bordering countries match a country then bring back that countries information. Make sure to bind(this) as I presume by having to map twice it will lose what this is. Also I could use => which is like writting 'function' and also means you dont have to use bind(this)
+	
+	  //setting up step3, this will happen after a render
+	  componentDidMount: function componentDidMount() {
+	    var request = new XMLHttpRequest();
+	    request.open("GET", "https://restcountries.eu/rest/v1/all");
+	    request.onload = function () {
+	      var data = JSON.parse(request.responseText);
+	      //now we have the data we need to set the state, you can check this in the REACT tool.
+	      this.setState({ countries: data });
+	      //we need to bind it as this is in a call back and it will lose this
+	    }.bind(this);
+	    request.send();
+	  },
+	
+	  //step 1 creating the components
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h4',
+	        null,
+	        ' Countries Box '
+	      ),
+	      React.createElement(
+	        CountrySelect,
+	        { countries: this.state.countries, onSelectCountry: this.setSelectedCountry },
+	        ' '
+	      ),
+	      React.createElement(
+	        CountryInfo,
+	        { country: this.state.selectedCountry },
+	        ' '
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = CountriesBox;
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var CountrySelect = React.createClass({
+	  displayName: 'CountrySelect',
+	
+	
+	  getInitialState: function getInitialState() {
+	    return { selectedIndex: null };
+	  },
+	
+	  handleChange: function handleChange(e) {
+	    e.preventDefault();
+	    var newIndex = e.target.value;
+	    this.setState({ selectedIndex: newIndex });
+	    this.props.onSelectCountry(this.props.countries[newIndex]);
+	  },
+	
+	  render: function render() {
+	    var option = this.props.countries.map(function (country, index) {
+	      return React.createElement(
+	        'option',
+	        { value: index, key: index },
+	        ' ',
+	        country.name,
+	        ' '
+	      );
+	    });
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h4',
+	        null,
+	        ' Country Select '
+	      ),
+	      React.createElement(
+	        'select',
+	        { value: this.state.selectedIndex, onChange: this.handleChange },
+	        option
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = CountrySelect;
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var CountryBorders = __webpack_require__(162);
+	
+	var CountryInfo = React.createClass({
+	  displayName: 'CountryInfo',
+	
+	
+	  render: function render() {
+	    if (!this.props.country) {
+	      return React.createElement(
+	        'h4',
+	        null,
+	        ' Please select a country '
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h4',
+	        null,
+	        'Country: ',
+	        this.props.country.name
+	      ),
+	      React.createElement(
+	        'h5',
+	        null,
+	        'Capital: ',
+	        this.props.country.captial
+	      ),
+	      React.createElement(
+	        'h5',
+	        null,
+	        'Population: ',
+	        this.props.country.population
+	      ),
+	      React.createElement(
+	        'h5',
+	        null,
+	        'Currencies: ',
+	        this.props.country.currencies
+	      ),
+	      React.createElement(
+	        'h5',
+	        null,
+	        'Languages: ',
+	        this.props.country.languages
+	      ),
+	      React.createElement(
+	        'h5',
+	        null,
+	        'Translations: ',
+	        this.props.country.translations.de
+	      ),
+	      React.createElement(CountryBorders, { borders: this.props.country.borders })
+	    );
+	  }
+	});
+	
+	module.exports = CountryInfo;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var CountryBorder = React.createClass({
+	  displayName: 'CountryBorder',
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      'h4',
+	      null,
+	      'country borders'
+	    );
+	  }
+	});
+	
+	module.exports = CountryBorder;
 
 /***/ }
 /******/ ]);

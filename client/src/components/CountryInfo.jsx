@@ -1,4 +1,5 @@
 var React= require('react');
+var CountryBorders = require('./CountryBorders')
 
 var CountryInfo = React.createClass({
 
@@ -15,8 +16,7 @@ var CountryInfo = React.createClass({
       <h5>Languages: {this.props.country.languages}</h5>
       <h5>Translations: {this.props.country.translations.de}</h5>
 
-      <p><h4>Border Countries</h4></p>
-      <h5>{this.props.}
+      <CountryBorders borders= {this.props.country.borders}/>
       </div>
       )  
     }
