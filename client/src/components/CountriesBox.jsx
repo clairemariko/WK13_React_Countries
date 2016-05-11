@@ -1,5 +1,6 @@
 var CountrySelect = require('./CountrySelect');
 var CountryInfo = require('./CountryInfo');
+var _ = require('lodash');
 
 
 var React= require('react');
@@ -35,16 +36,17 @@ var CountriesBox = React.createClass({
 
   getCountryByCode: function(code){
     return _.find(this.state.countries, function(country){ 
-      return country.aplha3Code === code
+      return country.alpha3Code === code
      })
     },
 
 
   getBorderingCountries: function(){
+    if(!this.state.selectedCountry){return [];}
     var borderingCountries = this.state.selectedCountry.borders.map(function(code){
       return this.getCountryByCode(code);
      }.bind(this))
-   return borderingCountries;
+    return borderingCountries;
    },
 
 
@@ -56,8 +58,9 @@ var CountriesBox = React.createClass({
     return (
       <div>
         <h4> Countries Box </h4>
-        <CountrySelect countries={this.state.countries} onSelectCountry={this.setSelectedCountry}> </CountrySelect>
-        <CountryInfo country={this.state.selectedCountry}> </CountryInfo>
+        <CountrySelect countries={this.state.countries} onSelectCountry={this.setSelectedCountry}></CountrySelect>
+        <CountryInfo country={this.state.selectedCountry} borderingCountries={borderingCountries}></CountryInfo>
+
       </div>
     )
   }
