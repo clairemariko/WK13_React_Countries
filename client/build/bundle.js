@@ -19702,8 +19702,23 @@
 	    request.send();
 	  },
 	
+	  getCountryByCode: function getCountryByCode(code) {
+	    return _.find(this.state.countries, function (country) {
+	      return country.aplha3Code === code;
+	    });
+	  },
+	
+	  getBorderingCountries: function getBorderingCountries() {
+	    var borderingCountries = this.state.selectedCountry.borders.map(function (code) {
+	      return this.getCountryByCode(code);
+	    }.bind(this));
+	    return borderingCountries;
+	  },
+	
 	  //step 1 creating the components
 	  render: function render() {
+	    // this.state.selectedCountry.borderingCountries = this.getBorderingCountries();
+	    var borderingCountries = this.getBorderingCountries();
 	    return React.createElement(
 	      'div',
 	      null,
@@ -19860,10 +19875,28 @@
 	
 	
 	  render: function render() {
+	    var countryListItems = this.props.borders.map(function (border) {
+	      return React.createElement(
+	        'li',
+	        { key: border },
+	        ' ',
+	        border,
+	        ' '
+	      );
+	    });
 	    return React.createElement(
-	      'h4',
+	      'div',
 	      null,
-	      'country borders'
+	      React.createElement(
+	        'h4',
+	        null,
+	        'country borders'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        countryListItems
+	      )
 	    );
 	  }
 	});

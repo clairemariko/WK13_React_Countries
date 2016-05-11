@@ -32,16 +32,32 @@ var CountriesBox = React.createClass({
     request.send();
   },
 
+
+  getCountryByCode: function(code){
+    return _.find(this.state.countries, function(country){ 
+      return country.aplha3Code === code
+     })
+    },
+
+
+  getBorderingCountries: function(){
+    var borderingCountries = this.state.selectedCountry.borders.map(function(code){
+      return this.getCountryByCode(code);
+     }.bind(this))
+   return borderingCountries;
+   },
+
+
+
 //step 1 creating the components
   render:function(){
+  // this.state.selectedCountry.borderingCountries = this.getBorderingCountries();
+  var borderingCountries = this.getBorderingCountries();
     return (
       <div>
         <h4> Countries Box </h4>
         <CountrySelect countries={this.state.countries} onSelectCountry={this.setSelectedCountry}> </CountrySelect>
         <CountryInfo country={this.state.selectedCountry}> </CountryInfo>
-
-     
-
       </div>
     )
   }
