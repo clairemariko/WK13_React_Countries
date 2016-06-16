@@ -19670,7 +19670,8 @@
 	
 	var CountrySelect = __webpack_require__(160);
 	var CountryInfo = __webpack_require__(161);
-	var _ = __webpack_require__(163);
+	var RegionSelect = __webpack_require__(163);
+	var _ = __webpack_require__(164);
 	
 	var React = __webpack_require__(1);
 	
@@ -19680,7 +19681,7 @@
 	
 	  //step 2 create an intial state and we dont have any data atm so it is an empty array. this is before the render
 	  getInitialState: function getInitialState() {
-	    return { countries: [], selectedCountry: null };
+	    return { countries: [], selectedCountry: null, selectedRegion: null };
 	  },
 	
 	  //setting the state so it now the object country
@@ -19688,7 +19689,9 @@
 	    this.setState({ selectedCountry: country });
 	  },
 	
-	  //setting border countries. I want to map over current country and bring back it bordering countires and get the alpha codes. then by mapping over Countries if the aplha code from the bordering countries match a country then bring back that countries information. Make sure to bind(this) as I presume by having to map twice it will lose what this is. Also I could use => which is like writting 'function' and also means you dont have to use bind(this)
+	  setSelectedRegion: function setSelectedRegion(region) {
+	    this.setState({ selectedRegion: region });
+	  },
 	
 	  //setting up step3, this will happen after a render
 	  componentDidMount: function componentDidMount() {
@@ -19697,7 +19700,7 @@
 	    request.onload = function () {
 	      var data = JSON.parse(request.responseText);
 	      //now we have the data we need to set the state, you can check this in the REACT tool.
-	      this.setState({ countries: data });
+	      this.setState({ countries: data, selectedCountry: data[0], selectedRegion: data[0].region });
 	      //we need to bind it as this is in a call back and it will lose this
 	    }.bind(this);
 	    request.send();
@@ -19719,6 +19722,24 @@
 	    return borderingCountries;
 	  },
 	
+	  //we care that a MAP RETURNS, remember always return, return! the uniq get rids of the duplicate. this.state.countries as you are doing it over all the countries! idiot!
+	  getRegions: function getRegions() {
+	    var regions = this.state.countries.map(function (country) {
+	      return country.region;
+	    });
+	    return _.uniq(regions);
+	  },
+	
+	  filteredCountries: function filteredCountries() {
+	    if (!this.state.selectedRegion) {
+	      return this.state.countries;
+	    }
+	    var filteredCountries = this.state.countries.filter(function (country) {
+	      return country.region === this.state.selectedRegion;
+	    }.bind(this));
+	    return filteredCountries;
+	  },
+	
 	  //step 1 creating the components
 	  render: function render() {
 	    // this.state.selectedCountry.borderingCountries = this.getBorderingCountries();
@@ -19731,7 +19752,8 @@
 	        null,
 	        ' Countries Box '
 	      ),
-	      React.createElement(CountrySelect, { countries: this.state.countries, onSelectCountry: this.setSelectedCountry }),
+	      React.createElement(RegionSelect, { regions: this.getRegions(), onSelectRegion: this.setSelectedRegion }),
+	      React.createElement(CountrySelect, { countries: this.filteredCountries(), onSelectCountry: this.setSelectedCountry }),
 	      React.createElement(CountryInfo, { country: this.state.selectedCountry, borderingCountries: borderingCountries })
 	    );
 	  }
@@ -19903,6 +19925,48 @@
 
 /***/ },
 /* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var RegionSelect = React.createClass({
+	  displayName: 'RegionSelect',
+	
+	
+	  getInitialState: function getInitialState() {
+	    return { selectedIndex: null };
+	  },
+	
+	  handleChange: function handleChange(e) {
+	    e.preventDefault();
+	    var newIndex = e.target.value;
+	    this.setState({ selectedIndex: newIndex });
+	    //add this part after you hook it up in the render
+	    this.props.onSelectRegion(this.props.regions[newIndex]);
+	  },
+	
+	  render: function render() {
+	    var options = this.props.regions.map(function (region, index) {
+	      return React.createElement(
+	        'option',
+	        { value: index, key: index },
+	        region
+	      );
+	    });
+	    return React.createElement(
+	      'select',
+	      { value: this.state.selectedIndex, onChange: this.handleChange },
+	      options
+	    );
+	  }
+	});
+	
+	module.exports = RegionSelect;
+
+/***/ },
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -36148,10 +36212,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(164)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(165)(module), (function() { return this; }())))
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {

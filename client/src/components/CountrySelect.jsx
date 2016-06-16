@@ -13,8 +13,6 @@ var CountrySelect = React.createClass({
     this.props.onSelectCountry(this.props.countries[newIndex]);
 
   },
-  
-
 
   render:function(){
     var option = this.props.countries.map(function(country, index){
@@ -24,7 +22,6 @@ var CountrySelect = React.createClass({
           <div>
             <h4> Country Select </h4>
             <select value={this.state.selectedIndex} onChange={this.handleChange}>
-
               {option}
             </select>
           </div>
